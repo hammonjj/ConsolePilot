@@ -6,7 +6,6 @@
     bottom: 0;
     align-items: stretch;
     justify-content: flex-start;
-    pointer-events: auto;
 }
 
 .console-pilot-panel {
