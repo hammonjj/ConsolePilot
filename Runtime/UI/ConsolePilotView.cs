@@ -31,6 +31,7 @@ namespace ConsolePilot.UI
         private Button _captureHotkeyButton;
         private Button _resetHotkeyButton;
         private bool _settingsVisible;
+        private bool _hotkeyControlsEnabled = true;
 
         public ConsolePilotView(VisualElement documentRoot, ConsoleRuntimeSettings settings)
         {
@@ -107,14 +108,32 @@ namespace ConsolePilot.UI
 
         public void SetHotkeyText(string displayName)
         {
+            if (_hotkeyControlsEnabled == false)
+            {
+                _hotkeyLabel.text = "External input";
+                return;
+            }
+
             _hotkeyLabel.text = string.IsNullOrWhiteSpace(displayName) ? "Unassigned" : displayName;
+        }
+
+        public void SetHotkeyControlsEnabled(bool isEnabled)
+        {
+            _hotkeyControlsEnabled = isEnabled;
+            _captureHotkeyButton.SetEnabled(isEnabled);
+            _resetHotkeyButton.SetEnabled(isEnabled);
+
+            if (isEnabled == false)
+            {
+                _hotkeyLabel.text = "External input";
+            }
         }
 
         public void SetCaptureMode(bool isCapturing)
         {
             _captureHotkeyButton.text = isCapturing ? "Press a key..." : "Capture";
-            _captureHotkeyButton.SetEnabled(isCapturing == false);
-            _resetHotkeyButton.SetEnabled(isCapturing == false);
+            _captureHotkeyButton.SetEnabled(_hotkeyControlsEnabled && isCapturing == false);
+            _resetHotkeyButton.SetEnabled(_hotkeyControlsEnabled && isCapturing == false);
         }
 
         public void InsertCharacter(char character)

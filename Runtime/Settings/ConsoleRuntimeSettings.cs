@@ -9,6 +9,8 @@ namespace ConsolePilot.Settings
         private float _consoleHeightPercent;
         private string _toggleBindingPath;
 
+        public bool UseBuiltInToggleInput { get; set; }
+
         public string ToggleBindingPath
         {
             get { return _toggleBindingPath; }
@@ -39,6 +41,7 @@ namespace ConsolePilot.Settings
         {
             return new ConsoleRuntimeSettings
             {
+                UseBuiltInToggleInput = true,
                 ToggleBindingPath = ConsolePilotSettings.DefaultToggleBindingPath,
                 MaxOutputEntries = 200,
                 OpenOnStart = false,

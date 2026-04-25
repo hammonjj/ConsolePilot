@@ -48,10 +48,59 @@ The hotkey can be configured in two places:
 
 - Default value: `ConsolePilotSettings.ToggleBindingPath`
 - Runtime session value: the console settings panel
+- Built-in toggle ownership: `ConsolePilotSettings.Use Built In Toggle Input`
 
 Open the console, select `Settings`, then select `Capture`. Press a new keyboard key to replace the toggle binding for the current session. Select `Reset` to restore backquote.
 
 V1 does not persist runtime hotkey edits. Add an `IConsoleSettingsStore` later if persistent settings are needed.
+
+## External Input Control
+
+Projects can own console visibility input instead of using ConsolePilot's built-in hotkey.
+
+1. Disable `Use Built In Toggle Input` on `ConsolePilotSettings`.
+2. Bind your game's Input System action to one of these public methods:
+   - `ConsolePilotRuntime.Open()`
+   - `ConsolePilotRuntime.Close()`
+   - `ConsolePilotRuntime.Toggle()`
+   - `ConsolePilotRuntime.SetOpen(bool isOpen)`
+
+`ConsolePilotRuntime` also implements `IConsolePilotOpenCloseTarget` for code that wants to depend on the smaller open/close contract instead of the full runtime component.
+
+For UnityEvent-style Input System callbacks, add `ConsolePilotInputActionBridge` to the ConsolePilot GameObject and bind your input action's `performed` callback to `ConsolePilotInputActionBridge.Toggle(InputAction.CallbackContext)`, `Open(...)`, or `Close(...)`.
+
+Example:
+
+```csharp
+using ConsolePilot;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public sealed class ConsolePilotToggleInput : MonoBehaviour
+{
+    [SerializeField] private ConsolePilotRuntime _consolePilot;
+    [SerializeField] private InputActionReference _toggleAction;
+
+    private void OnEnable()
+    {
+        _toggleAction.action.performed += OnTogglePerformed;
+        _toggleAction.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _toggleAction.action.performed -= OnTogglePerformed;
+        _toggleAction.action.Disable();
+    }
+
+    private void OnTogglePerformed(InputAction.CallbackContext context)
+    {
+        _consolePilot.Toggle();
+    }
+}
+```
+
+ConsolePilot still captures command text through the Input System while open. The external input path only transfers ownership of opening and closing the console.
 
 ## Adding Commands
 

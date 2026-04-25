@@ -46,7 +46,12 @@ namespace ConsolePilot.UI
             _view.CloseRequested += Close;
             _output.EntryAdded += OnOutputEntryAdded;
             _output.Cleared += OnOutputCleared;
-            _hotkey.ToggleRequested += Toggle;
+
+            if (_settings.UseBuiltInToggleInput)
+            {
+                _hotkey.ToggleRequested += Toggle;
+            }
+
             _textInput.CharacterTyped += OnCharacterTyped;
             _textInput.BackspaceRequested += OnBackspaceRequested;
             _textInput.DeleteRequested += OnDeleteRequested;
@@ -55,6 +60,7 @@ namespace ConsolePilot.UI
             _textInput.SubmitRequested += OnSubmitRequested;
             _textInput.CancelRequested += Close;
 
+            _view.SetHotkeyControlsEnabled(_settings.UseBuiltInToggleInput);
             _view.SetHotkeyText(_hotkey.GetBindingDisplayName());
             _view.RenderEntries(_output.Entries);
             SetOpen(_settings.OpenOnStart);
@@ -62,7 +68,11 @@ namespace ConsolePilot.UI
 
         public void Tick()
         {
-            _hotkey.Tick();
+            if (_settings.UseBuiltInToggleInput || _hotkey.IsCapturing)
+            {
+                _hotkey.Tick();
+            }
+
             _textInput.Tick();
         }
 
@@ -89,7 +99,12 @@ namespace ConsolePilot.UI
             _view.CloseRequested -= Close;
             _output.EntryAdded -= OnOutputEntryAdded;
             _output.Cleared -= OnOutputCleared;
-            _hotkey.ToggleRequested -= Toggle;
+
+            if (_settings.UseBuiltInToggleInput)
+            {
+                _hotkey.ToggleRequested -= Toggle;
+            }
+
             _textInput.CharacterTyped -= OnCharacterTyped;
             _textInput.BackspaceRequested -= OnBackspaceRequested;
             _textInput.DeleteRequested -= OnDeleteRequested;
@@ -160,6 +175,12 @@ namespace ConsolePilot.UI
 
         private void OnCaptureHotkeyRequested()
         {
+            if (_settings.UseBuiltInToggleInput == false)
+            {
+                _output.Write(ConsoleOutputEntry.Create("Built-in toggle input is disabled. Use external input to call Open, Close, Toggle, or SetOpen.", ConsoleOutputLevel.System));
+                return;
+            }
+
             _view.SetCaptureMode(true);
             _hotkey.BeginHotkeyCapture(OnHotkeyCaptured, OnHotkeyCaptureCanceled);
         }
@@ -180,6 +201,12 @@ namespace ConsolePilot.UI
 
         private void OnResetHotkeyRequested()
         {
+            if (_settings.UseBuiltInToggleInput == false)
+            {
+                _output.Write(ConsoleOutputEntry.Create("Built-in toggle input is disabled. The hotkey setting is ignored.", ConsoleOutputLevel.System));
+                return;
+            }
+
             _settings.ToggleBindingPath = ConsolePilotSettings.DefaultToggleBindingPath;
             _hotkey.SetBinding(_settings.ToggleBindingPath);
             _view.SetHotkeyText(_hotkey.GetBindingDisplayName());

@@ -8,6 +8,7 @@ namespace ConsolePilot.Settings
     {
         public const string DefaultToggleBindingPath = "<Keyboard>/backquote";
 
+        [SerializeField] private bool _useBuiltInToggleInput = true;
         [SerializeField] private string _toggleBindingPath = DefaultToggleBindingPath;
         [SerializeField] private int _maxOutputEntries = 200;
         [SerializeField] private bool _openOnStart;
@@ -15,6 +16,11 @@ namespace ConsolePilot.Settings
         [SerializeField] private float _consoleHeightPercent = 0.45f;
         [SerializeField] private VisualTreeAsset _consoleVisualTree;
         [SerializeField] private StyleSheet _themeStyleSheet;
+
+        public bool UseBuiltInToggleInput
+        {
+            get { return _useBuiltInToggleInput; }
+        }
 
         public string ToggleBindingPath
         {
@@ -55,6 +61,7 @@ namespace ConsolePilot.Settings
         {
             return new ConsoleRuntimeSettings
             {
+                UseBuiltInToggleInput = UseBuiltInToggleInput,
                 ToggleBindingPath = ToggleBindingPath,
                 MaxOutputEntries = MaxOutputEntries,
                 OpenOnStart = OpenOnStart,

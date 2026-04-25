@@ -13,7 +13,7 @@ namespace ConsolePilot
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIDocument))]
-    public sealed class ConsolePilotRuntime : MonoBehaviour
+    public sealed class ConsolePilotRuntime : MonoBehaviour, IConsolePilotOpenCloseTarget
     {
         [SerializeField] private ConsolePilotSettings _settings;
         [SerializeField] private UIDocument _uiDocument;
@@ -30,6 +30,7 @@ namespace ConsolePilot
         private InputSystemHotkeyController _hotkey;
         private InputSystemConsoleTextController _textInput;
         private ConsolePilotPresenter _presenter;
+        private bool? _pendingOpenState;
 
         public event Action<bool> OpenStateChanged;
 
@@ -87,17 +88,41 @@ namespace ConsolePilot
 
         public void Open()
         {
-            _presenter?.Open();
+            SetOpen(true);
         }
 
         public void Close()
         {
-            _presenter?.Close();
+            SetOpen(false);
         }
 
         public void Toggle()
         {
-            _presenter?.Toggle();
+            if (_presenter == null)
+            {
+                SetOpen(_pendingOpenState.HasValue == false || _pendingOpenState.Value == false);
+                return;
+            }
+
+            _presenter.Toggle();
+        }
+
+        public void SetOpen(bool isOpen)
+        {
+            if (_presenter == null)
+            {
+                _pendingOpenState = isOpen;
+                return;
+            }
+
+            if (isOpen)
+            {
+                _presenter.Open();
+            }
+            else
+            {
+                _presenter.Close();
+            }
         }
 
         private void Awake()
@@ -127,12 +152,23 @@ namespace ConsolePilot
             _presenter = new ConsolePilotPresenter(CreateView(), _executor, _output, _hotkey, _textInput, _runtimeSettings);
             _presenter.OpenStateChanged += OnPresenterOpenStateChanged;
             _presenter.Initialize();
+
+            if (_pendingOpenState.HasValue)
+            {
+                SetOpen(_pendingOpenState.Value);
+                _pendingOpenState = null;
+            }
+
             _output.Write(ConsoleOutputEntry.Create("ConsolePilot ready. Type 'help' for commands.", ConsoleOutputLevel.System));
         }
 
         private void OnEnable()
         {
-            _hotkey?.Enable();
+            if (_runtimeSettings == null || _runtimeSettings.UseBuiltInToggleInput)
+            {
+                _hotkey?.Enable();
+            }
+
             _textInput?.Enable();
         }
 

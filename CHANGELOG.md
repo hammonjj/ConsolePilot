@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Added `IConsolePilotOpenCloseTarget` and public `SetOpen(bool)` for external input integrations.
+- Added a settings flag to disable the built-in toggle hotkey when a consuming project owns console visibility input.
+- Added `ConsolePilotInputActionBridge` for Input System callback integrations.
+
 ## 0.1.2
 
 - Fixed startup visibility so the console is hidden when `Open On Start` is disabled.
