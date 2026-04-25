@@ -40,6 +40,8 @@ The default toggle binding is:
 
 At runtime, press the backquote/tilde key to open or close the console. The console focuses the command input when opened.
 
+ConsolePilot captures command text through the Unity Input System while the console is open. This keeps typing reliable even when UI Toolkit focus is inconsistent in Play Mode.
+
 ## Hotkey Configuration
 
 The hotkey can be configured in two places:
@@ -168,6 +170,39 @@ Samples~/MessageBusAdapters/BitBoxMessageBusConsoleDispatcher.cs.txt
 ```
 
 Copy it into a game assembly, rename it to `.cs`, and reference the project-specific BitBox `MessageBus`. The runtime package itself does not reference BitBox.
+
+## Blocking Gameplay Input
+
+Unity gameplay `InputAction`s still receive keyboard input unless your game disables or gates them. ConsolePilot exposes `OpenStateChanged` so the consuming game can pause movement input while the console is visible:
+
+```csharp
+using ConsolePilot;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public sealed class ConsolePilotGameplayInputGate : MonoBehaviour
+{
+    [SerializeField] private ConsolePilotRuntime _consolePilot;
+    [SerializeField] private PlayerInput _playerInput;
+
+    private void OnEnable()
+    {
+        _consolePilot.OpenStateChanged += OnConsoleOpenStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        _consolePilot.OpenStateChanged -= OnConsoleOpenStateChanged;
+    }
+
+    private void OnConsoleOpenStateChanged(bool isOpen)
+    {
+        _playerInput.enabled = isOpen == false;
+    }
+}
+```
+
+If your project uses custom input services instead of `PlayerInput`, subscribe to the same event and disable the relevant gameplay action map there.
 
 ## Example Command
 

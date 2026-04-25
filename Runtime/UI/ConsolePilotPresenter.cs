@@ -12,6 +12,7 @@ namespace ConsolePilot.UI
         private readonly ConsoleCommandExecutor _executor;
         private readonly ConsoleOutputBuffer _output;
         private readonly InputSystemHotkeyController _hotkey;
+        private readonly InputSystemConsoleTextController _textInput;
         private readonly ConsoleRuntimeSettings _settings;
 
         public ConsolePilotPresenter(
@@ -19,14 +20,18 @@ namespace ConsolePilot.UI
             ConsoleCommandExecutor executor,
             ConsoleOutputBuffer output,
             InputSystemHotkeyController hotkey,
+            InputSystemConsoleTextController textInput,
             ConsoleRuntimeSettings settings)
         {
             _view = view;
             _executor = executor;
             _output = output;
             _hotkey = hotkey;
+            _textInput = textInput;
             _settings = settings;
         }
+
+        public event Action<bool> OpenStateChanged;
 
         public bool IsOpen
         {
@@ -42,30 +47,38 @@ namespace ConsolePilot.UI
             _output.EntryAdded += OnOutputEntryAdded;
             _output.Cleared += OnOutputCleared;
             _hotkey.ToggleRequested += Toggle;
+            _textInput.CharacterTyped += OnCharacterTyped;
+            _textInput.BackspaceRequested += OnBackspaceRequested;
+            _textInput.DeleteRequested += OnDeleteRequested;
+            _textInput.MoveCaretLeftRequested += OnMoveCaretLeftRequested;
+            _textInput.MoveCaretRightRequested += OnMoveCaretRightRequested;
+            _textInput.SubmitRequested += OnSubmitRequested;
+            _textInput.CancelRequested += Close;
 
             _view.SetHotkeyText(_hotkey.GetBindingDisplayName());
             _view.RenderEntries(_output.Entries);
-            _view.SetOpen(_settings.OpenOnStart);
+            SetOpen(_settings.OpenOnStart);
         }
 
         public void Tick()
         {
             _hotkey.Tick();
+            _textInput.Tick();
         }
 
         public void Open()
         {
-            _view.SetOpen(true);
+            SetOpen(true);
         }
 
         public void Close()
         {
-            _view.SetOpen(false);
+            SetOpen(false);
         }
 
         public void Toggle()
         {
-            _view.SetOpen(_view.IsOpen == false);
+            SetOpen(_view.IsOpen == false);
         }
 
         public void Dispose()
@@ -77,12 +90,61 @@ namespace ConsolePilot.UI
             _output.EntryAdded -= OnOutputEntryAdded;
             _output.Cleared -= OnOutputCleared;
             _hotkey.ToggleRequested -= Toggle;
+            _textInput.CharacterTyped -= OnCharacterTyped;
+            _textInput.BackspaceRequested -= OnBackspaceRequested;
+            _textInput.DeleteRequested -= OnDeleteRequested;
+            _textInput.MoveCaretLeftRequested -= OnMoveCaretLeftRequested;
+            _textInput.MoveCaretRightRequested -= OnMoveCaretRightRequested;
+            _textInput.SubmitRequested -= OnSubmitRequested;
+            _textInput.CancelRequested -= Close;
+        }
+
+        private void SetOpen(bool isOpen)
+        {
+            if (_view.IsOpen == isOpen)
+            {
+                return;
+            }
+
+            _view.SetOpen(isOpen);
+            _textInput.SetActive(isOpen);
+            OpenStateChanged?.Invoke(isOpen);
         }
 
         private void OnCommandSubmitted(string commandText)
         {
             _executor.Execute(commandText);
             _view.FocusInput();
+        }
+
+        private void OnCharacterTyped(char character)
+        {
+            _view.InsertCharacter(character);
+        }
+
+        private void OnBackspaceRequested()
+        {
+            _view.Backspace();
+        }
+
+        private void OnDeleteRequested()
+        {
+            _view.Delete();
+        }
+
+        private void OnMoveCaretLeftRequested()
+        {
+            _view.MoveCaretLeft();
+        }
+
+        private void OnMoveCaretRightRequested()
+        {
+            _view.MoveCaretRight();
+        }
+
+        private void OnSubmitRequested()
+        {
+            _view.SubmitInput();
         }
 
         private void OnOutputEntryAdded(ConsoleOutputEntry entry)

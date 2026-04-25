@@ -50,6 +50,11 @@ namespace ConsolePilot.UI
 
         public bool IsOpen { get; private set; }
 
+        public string InputText
+        {
+            get { return _inputField.value ?? string.Empty; }
+        }
+
         public void SetOpen(bool isOpen)
         {
             IsOpen = isOpen;
@@ -66,6 +71,7 @@ namespace ConsolePilot.UI
             _inputField.schedule.Execute(() =>
             {
                 _inputField.Focus();
+                ApplyCaretIndex();
             });
         }
 
@@ -111,6 +117,59 @@ namespace ConsolePilot.UI
             _resetHotkeyButton.SetEnabled(isCapturing == false);
         }
 
+        public void InsertCharacter(char character)
+        {
+            var text = InputText;
+            var caretIndex = Mathf.Clamp(_inputField.cursorIndex, 0, text.Length);
+            var nextText = text.Insert(caretIndex, character.ToString());
+            SetInputText(nextText, caretIndex + 1);
+        }
+
+        public void Backspace()
+        {
+            var text = InputText;
+            var caretIndex = Mathf.Clamp(_inputField.cursorIndex, 0, text.Length);
+
+            if (caretIndex <= 0)
+            {
+                return;
+            }
+
+            var nextText = text.Remove(caretIndex - 1, 1);
+            SetInputText(nextText, caretIndex - 1);
+        }
+
+        public void Delete()
+        {
+            var text = InputText;
+            var caretIndex = Mathf.Clamp(_inputField.cursorIndex, 0, text.Length);
+
+            if (caretIndex >= text.Length)
+            {
+                return;
+            }
+
+            var nextText = text.Remove(caretIndex, 1);
+            SetInputText(nextText, caretIndex);
+        }
+
+        public void MoveCaretLeft()
+        {
+            SetCaretIndex(_inputField.cursorIndex - 1);
+        }
+
+        public void MoveCaretRight()
+        {
+            SetCaretIndex(_inputField.cursorIndex + 1);
+        }
+
+        public void SubmitInput()
+        {
+            var commandText = InputText;
+            SetInputText(string.Empty, 0);
+            CommandSubmitted?.Invoke(commandText);
+        }
+
         private static string FormatEntry(ConsoleOutputEntry entry)
         {
             return $"[{entry.Timestamp:HH:mm:ss}] {entry.Message}";
@@ -142,26 +201,32 @@ namespace ConsolePilot.UI
             _closeButton.clicked += () => CloseRequested?.Invoke();
             _captureHotkeyButton.clicked += () => CaptureHotkeyRequested?.Invoke();
             _resetHotkeyButton.clicked += () => ResetHotkeyRequested?.Invoke();
-            _inputField.RegisterCallback<KeyDownEvent>(OnInputKeyDown);
+            _inputField.isReadOnly = true;
             SetSettingsVisible(false);
-        }
-
-        private void OnInputKeyDown(KeyDownEvent evt)
-        {
-            if (evt.keyCode != KeyCode.Return && evt.keyCode != KeyCode.KeypadEnter)
-            {
-                return;
-            }
-
-            var commandText = _inputField.value;
-            _inputField.value = string.Empty;
-            evt.StopPropagation();
-            CommandSubmitted?.Invoke(commandText);
         }
 
         private void ToggleSettingsPanel()
         {
             SetSettingsVisible(_settingsVisible == false);
+        }
+
+        private void SetInputText(string text, int caretIndex)
+        {
+            _inputField.SetValueWithoutNotify(text ?? string.Empty);
+            SetCaretIndex(caretIndex);
+            FocusInput();
+        }
+
+        private void SetCaretIndex(int caretIndex)
+        {
+            var clampedIndex = Mathf.Clamp(caretIndex, 0, InputText.Length);
+            _inputField.cursorIndex = clampedIndex;
+            _inputField.selectIndex = clampedIndex;
+        }
+
+        private void ApplyCaretIndex()
+        {
+            SetCaretIndex(_inputField.cursorIndex);
         }
 
         private void SetSettingsVisible(bool isVisible)

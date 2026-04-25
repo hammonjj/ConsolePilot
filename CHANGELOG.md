@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- Added package `.meta` files required for Git/UPM imports.
+- Removed `.meta` files from hidden UPM folders.
+- Added Input System-backed console text capture for reliable command entry.
+- Exposed `ConsolePilotRuntime.OpenStateChanged` for gameplay input gating.
+
 ## 0.1.0
 
 - Initial package scaffold.

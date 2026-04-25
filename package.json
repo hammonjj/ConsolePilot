@@ -1,6 +1,6 @@
 {
   "name": "com.consolepilot.debugconsole",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "ConsolePilot Debug Console",
   "description": "A reusable runtime debug console for Unity projects, built with UI Toolkit and the Unity Input System.",
   "unity": "2022.3",

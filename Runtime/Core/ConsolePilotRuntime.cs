@@ -1,3 +1,4 @@
+using System;
 using ConsolePilot.Commands;
 using ConsolePilot.Commands.BuiltIn;
 using ConsolePilot.Dispatch;
@@ -27,7 +28,10 @@ namespace ConsolePilot
         private IConsoleEventDispatcher _events;
         private ConsoleRuntimeSettings _runtimeSettings;
         private InputSystemHotkeyController _hotkey;
+        private InputSystemConsoleTextController _textInput;
         private ConsolePilotPresenter _presenter;
+
+        public event Action<bool> OpenStateChanged;
 
         public IConsoleCommandRegistry Commands
         {
@@ -119,7 +123,9 @@ namespace ConsolePilot
             BuildUi();
 
             _hotkey = new InputSystemHotkeyController(_runtimeSettings.ToggleBindingPath);
-            _presenter = new ConsolePilotPresenter(CreateView(), _executor, _output, _hotkey, _runtimeSettings);
+            _textInput = new InputSystemConsoleTextController();
+            _presenter = new ConsolePilotPresenter(CreateView(), _executor, _output, _hotkey, _textInput, _runtimeSettings);
+            _presenter.OpenStateChanged += OnPresenterOpenStateChanged;
             _presenter.Initialize();
             _output.Write(ConsoleOutputEntry.Create("ConsolePilot ready. Type 'help' for commands.", ConsoleOutputLevel.System));
         }
@@ -127,6 +133,7 @@ namespace ConsolePilot
         private void OnEnable()
         {
             _hotkey?.Enable();
+            _textInput?.Enable();
         }
 
         private void Update()
@@ -137,12 +144,24 @@ namespace ConsolePilot
         private void OnDisable()
         {
             _hotkey?.Disable();
+            _textInput?.Disable();
         }
 
         private void OnDestroy()
         {
+            if (_presenter != null)
+            {
+                _presenter.OpenStateChanged -= OnPresenterOpenStateChanged;
+            }
+
             _presenter?.Dispose();
             _hotkey?.Dispose();
+            _textInput?.Dispose();
+        }
+
+        private void OnPresenterOpenStateChanged(bool isOpen)
+        {
+            OpenStateChanged?.Invoke(isOpen);
         }
 
         private IConsoleEventDispatcher ResolveEventDispatcher()
