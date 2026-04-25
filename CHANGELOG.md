@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Fixed startup visibility so the console is hidden when `Open On Start` is disabled.
+
 ## 0.1.1
 
 - Added package `.meta` files required for Git/UPM imports.

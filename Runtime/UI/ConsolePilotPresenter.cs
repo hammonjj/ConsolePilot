@@ -101,14 +101,15 @@ namespace ConsolePilot.UI
 
         private void SetOpen(bool isOpen)
         {
-            if (_view.IsOpen == isOpen)
-            {
-                return;
-            }
+            var wasOpen = _view.IsOpen;
 
             _view.SetOpen(isOpen);
             _textInput.SetActive(isOpen);
-            OpenStateChanged?.Invoke(isOpen);
+
+            if (wasOpen != isOpen)
+            {
+                OpenStateChanged?.Invoke(isOpen);
+            }
         }
 
         private void OnCommandSubmitted(string commandText)
