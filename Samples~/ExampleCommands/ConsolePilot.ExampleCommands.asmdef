@@ -1,0 +1,16 @@
+{
+  "name": "ConsolePilot.ExampleCommands",
+  "rootNamespace": "ConsolePilot.Samples.ExampleCommands",
+  "references": [
+    "ConsolePilot.Runtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="ConsolePilotRoot" class="console-pilot-root">
+        <ui:VisualElement name="ConsolePilotPanel" class="console-pilot-panel">
+            <ui:VisualElement class="console-pilot-toolbar">
+                <ui:Label text="ConsolePilot" class="console-pilot-title" />
+                <ui:VisualElement class="console-pilot-spacer" />
+                <ui:Button name="ConsolePilotSettingsButton" text="Settings" class="console-pilot-button" />
+                <ui:Button name="ConsolePilotCloseButton" text="Close" class="console-pilot-button" />
+            </ui:VisualElement>
+            <ui:ScrollView name="ConsolePilotOutput" class="console-pilot-output" mode="Vertical" />
+            <ui:VisualElement class="console-pilot-input-row">
+                <ui:Label text="&gt;" class="console-pilot-prompt" />
+                <ui:TextField name="ConsolePilotInput" class="console-pilot-input" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ConsolePilotSettingsPanel" class="console-pilot-settings-panel">
+                <ui:Label text="Settings" class="console-pilot-settings-title" />
+                <ui:VisualElement class="console-pilot-settings-row">
+                    <ui:Label text="Toggle Hotkey" class="console-pilot-settings-label" />
+                    <ui:Label name="ConsolePilotHotkeyLabel" class="console-pilot-hotkey-label" />
+                    <ui:Button name="ConsolePilotCaptureHotkeyButton" text="Capture" class="console-pilot-button" />
+                    <ui:Button name="ConsolePilotResetHotkeyButton" text="Reset" class="console-pilot-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

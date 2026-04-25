@@ -1,0 +1,173 @@
+.console-pilot-root {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    align-items: stretch;
+    justify-content: flex-start;
+    pointer-events: auto;
+}
+
+.console-pilot-panel {
+    margin-top: 14px;
+    margin-left: 14px;
+    margin-right: 14px;
+    background-color: #1f232a;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: #343b46;
+    border-right-color: #343b46;
+    border-bottom-color: #343b46;
+    border-left-color: #343b46;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    color: #c9d1d9;
+    font-size: 13px;
+}
+
+.console-pilot-toolbar {
+    height: 32px;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 8px;
+    background-color: #252a33;
+    border-bottom-width: 1px;
+    border-bottom-color: #343b46;
+}
+
+.console-pilot-title {
+    color: #d6dde6;
+    font-size: 13px;
+    -unity-font-style: bold;
+}
+
+.console-pilot-spacer {
+    flex-grow: 1;
+}
+
+.console-pilot-button {
+    height: 24px;
+    margin-left: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+    background-color: #303743;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: #46505f;
+    border-right-color: #46505f;
+    border-bottom-color: #46505f;
+    border-left-color: #46505f;
+    color: #d6dde6;
+}
+
+.console-pilot-button:hover {
+    background-color: #394252;
+}
+
+.console-pilot-output {
+    flex-grow: 1;
+    min-height: 120px;
+    padding-top: 8px;
+    padding-right: 10px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    background-color: #1b1f26;
+}
+
+.console-pilot-output-entry {
+    white-space: normal;
+    margin-bottom: 3px;
+    color: #c9d1d9;
+}
+
+.console-pilot-output-entry--system {
+    color: #8fa7c2;
+}
+
+.console-pilot-output-entry--info {
+    color: #c9d1d9;
+}
+
+.console-pilot-output-entry--success {
+    color: #8fbc8f;
+}
+
+.console-pilot-output-entry--warning {
+    color: #d7ba7d;
+}
+
+.console-pilot-output-entry--error {
+    color: #d87b7b;
+}
+
+.console-pilot-input-row {
+    height: 34px;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #20252d;
+    border-top-width: 1px;
+    border-top-color: #343b46;
+}
+
+.console-pilot-prompt {
+    width: 18px;
+    color: #8fa7c2;
+    -unity-font-style: bold;
+}
+
+.console-pilot-input {
+    flex-grow: 1;
+    height: 26px;
+    color: #d6dde6;
+    background-color: #252a33;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-color: #343b46;
+    border-right-color: #343b46;
+    border-bottom-color: #343b46;
+    border-left-color: #343b46;
+}
+
+.console-pilot-settings-panel {
+    padding-top: 8px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    background-color: #252a33;
+    border-top-width: 1px;
+    border-top-color: #343b46;
+}
+
+.console-pilot-settings-title {
+    color: #d6dde6;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+}
+
+.console-pilot-settings-row {
+    min-height: 28px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.console-pilot-settings-label {
+    width: 110px;
+    color: #aeb8c4;
+}
+
+.console-pilot-hotkey-label {
+    min-width: 120px;
+    color: #d6dde6;
+}

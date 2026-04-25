@@ -1,0 +1,32 @@
+using System;
+using BitBox.Library.Eventing;
+using ConsolePilot.Dispatch;
+
+namespace ConsolePilot.Samples.MessageBusAdapters
+{
+    public sealed class BitBoxMessageBusConsoleDispatcher : IConsoleEventDispatcher
+    {
+        private readonly MessageBus _messageBus;
+
+        public BitBoxMessageBusConsoleDispatcher(MessageBus messageBus)
+        {
+            _messageBus = messageBus;
+        }
+
+        public void Publish<TEvent>(TEvent eventData)
+        {
+            _messageBus?.Publish(eventData);
+        }
+
+        public IConsoleSubscription Subscribe<TEvent>(Action<TEvent> handler)
+        {
+            if (_messageBus == null || handler == null)
+            {
+                return new DelegateConsoleSubscription(null);
+            }
+
+            _messageBus.Subscribe(handler);
+            return new DelegateConsoleSubscription(() => _messageBus.Unsubscribe(handler));
+        }
+    }
+}

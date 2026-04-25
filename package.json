@@ -1,0 +1,30 @@
+{
+  "name": "com.consolepilot.debugconsole",
+  "version": "0.1.0",
+  "displayName": "ConsolePilot Debug Console",
+  "description": "A reusable runtime debug console for Unity projects, built with UI Toolkit and the Unity Input System.",
+  "unity": "2022.3",
+  "author": {
+    "name": "ConsolePilot Contributors"
+  },
+  "dependencies": {
+    "com.unity.inputsystem": "1.7.0"
+  },
+  "samples": [
+    {
+      "displayName": "Basic Setup",
+      "description": "Minimal scene setup notes for adding ConsolePilot to a Unity project.",
+      "path": "Samples~/BasicSetup"
+    },
+    {
+      "displayName": "Example Commands",
+      "description": "A typed event example command that requests a debug cube spawn.",
+      "path": "Samples~/ExampleCommands"
+    },
+    {
+      "displayName": "Message Bus Adapters",
+      "description": "Generic and BitBox-style message bus adapter examples.",
+      "path": "Samples~/MessageBusAdapters"
+    }
+  ]
+}
