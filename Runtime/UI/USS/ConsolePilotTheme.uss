@@ -126,7 +126,9 @@
 
 .console-pilot-input {
     flex-grow: 1;
+    flex-shrink: 0;
     height: 26px;
+    min-height: 26px;
     color: #d6dde6;
     background-color: #252a33;
     border-top-width: 1px;
@@ -137,6 +139,19 @@
     border-right-color: #343b46;
     border-bottom-color: #343b46;
     border-left-color: #343b46;
+}
+
+.console-pilot-input .unity-base-field__input,
+.console-pilot-input .unity-text-field__input,
+.console-pilot-input .unity-text-input,
+.console-pilot-input .unity-text-element,
+.console-pilot-input .unity-text-element--inner-input-field-component {
+    flex-grow: 1;
+    flex-shrink: 0;
+    align-self: stretch;
+    height: 22px;
+    min-height: 22px;
+    color: #d6dde6;
 }
 
 .console-pilot-settings-panel {

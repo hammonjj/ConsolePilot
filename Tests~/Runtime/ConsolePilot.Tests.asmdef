@@ -2,9 +2,7 @@
   "name": "ConsolePilot.Tests",
   "rootNamespace": "ConsolePilot.Tests",
   "references": [
-    "ConsolePilot.Runtime",
-    "UnityEngine.TestRunner",
-    "UnityEditor.TestRunner"
+    "ConsolePilot.Runtime"
   ],
   "includePlatforms": [
     "Editor"
